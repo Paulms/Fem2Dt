@@ -6,7 +6,6 @@ MODULE quadrature
   ! (def puntos de integracion y pesos, valores de las derivadas y
   !  las funciones de base en los ptos. de integracion)
   !
-  USE tipos
   USE decimal
   !
   IMPLICIT NONE
@@ -915,7 +914,4 @@ CONTAINS
     END SELECT
     RETURN
   END SUBROUTINE shape_der
-
-
-
 END MODULE quadrature

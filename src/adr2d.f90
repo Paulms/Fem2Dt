@@ -37,7 +37,9 @@ PROGRAM adr2d
   !                                                                                        |
   !                    Tel   : (56-41) 20.31.16                                            |
   !                    Fax   : (56-41) 52.20.55                                            |
-  !                    e-mail: rodolfo.araya@udec.cl                               |
+  !                    e-mail: rodolfo.araya@udec.cl                                       |
+  !     Modificado por: Paul Mendez                                                        |
+  !                     e-mail: pmendez@ing-mat.udec.cl                                    |
   !                                                                                        |
   !      Version 1   : Septiembre de 2000 (con almacenamiento banda y Cholesky)            |
   !      Version 2   : Enero de 2001 (con almacenamiento Morse y GMRES de SLATEC)          |
@@ -47,6 +49,7 @@ PROGRAM adr2d
   !      Version 6   : Mayo 2002 (resolucion del sistema lineal usando SuperLU y ccs)      |
   !      Version 7   : Agosto 2011 (re-escritura general + uso de MKL)                     !
   !      Version 8   : Junio 2015 (revision general + comentarios)                         !
+  !      Version 9   : Diciembre 2016 (revision para resolver problemas evolutivos)        !
   !-----------------------------------------------------------------------------------------
   !
   ! Los modulos que usaremos:
@@ -76,12 +79,12 @@ PROGRAM adr2d
   REAL(KIND=dp)              :: tt
   REAL(KIND=dp), ALLOCATABLE :: ua(:)
 
-  tiempo%final = 0.0
-  tiempo%inicial = 0.0
+  tiempo%final = 0.0_dp
+  tiempo%inicial = 0.0_dp
   tiempo%nn = 0
-  tiempo%delta = 0.0
+  tiempo%delta = 0.0_dp
   ierr = 0
-  tt = 0.0
+  tt = 0.0_dp
   !
   CALL cpu_TIME(tiempo1)
   !

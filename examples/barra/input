@@ -1,0 +1,21 @@
+TRIAP12D                                  ------> Nombre del elemento finito a usar
+ 7                                        ------> Numero de puntos de integracion
+ 1                                        ------> dof por nodo 
+nodos.dat                                 ------> nombre del archivo con los nodos
+caras.dat                                 ------> nombre del archivo con las caras(lados)
+elementos.dat                             ------> nombre del archivo con los elementos
+ 1                                        ------> numero total dominios fisicos diferentes
+ 1  50.0 0.0 0.0 0.0                       ------> No ref dominio, nu, aa(:), sigma
+ 1                                        ------> numero total de fronteras Dirichlet
+ 1    1                                   ------> No ref Dirichlet, bloqueo de los dof
+ 0                                        ------> No condicion de Neumann no nula
+ 1                                        ------> Metodo de elementos finitos a usar (1 = Galerkin; 2 = Estabilizado; 3 = LPS modif)
+ 1                                        ------> Metodo de resolucion del sist lineal (1=SuperLU; 2 = GMRES; 3 = pGMRES, 4 = PARDISO)
+ 0                                        ------> Calculo de errores (0=ninguno, 1=a priori, 2= aposteriori, 3=a priori y a posteriori)
+ 4                                        ------> Opcion de visualizacion (1= Tecplot; 2 = Ensight; 3 = Vigie; paraview)
+concentracion                             ------> Nombre archivo(s) de salida para el ploteo
+ 50                                       -----> particion del tiempo
+ 1                                        -----> tiempo final
+
+
+

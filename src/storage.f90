@@ -500,7 +500,8 @@ CONTAINS
                                  Pv(:,:),x_bar(:),x_node(:)
     REAL(kind=dp)             :: det,tau,ht,cuociente,f_bar,aux,norma
     !
-    nod = 0; npi = 0; ndim = 0; dof = 0; nodof = 0; ierr = 0
+    nod = 0; npi = 0; ndim = 0; dof = 0; nodof = 0; ierr = 0 
+    tau = 0.0_dp
     !
     nod   = malla%element%nod
     npi   = malla%element%npi

@@ -101,10 +101,10 @@ CONTAINS
     ! Subrutina para usar la biblioteca PARDISO (i.e. LU para matrices no simetricas)
     !
     TYPE(sparse)      :: A
-    REAL(kind=dp)     :: xx(:),bb(SIZE(xx))
+    REAL(kind=dp)     :: xx(:),bb(SIZE(xx)), ddum
     INTEGER           :: maxfct, mnum, mtype, phase, nrhs, error, msglvl
     INTEGER(kind=8)   :: pt(64)
-    INTEGER           :: iparm(64)
+    INTEGER           :: iparm(64), idum, solver
     REAL(kind=dp)     :: dparm(64) 
 
     maxfct = 0; mnum = 0; mtype = 0; phase = 0; nrhs = 0; error = 0; msglvl = 0
@@ -141,11 +141,11 @@ CONTAINS
     !  .. pardiso_chk_matrix(...)
     !     Checks the consistency of the given matrix.
     !     Use this functionality only for debugging purposes
-!!$    CALL pardiso_chkmatrix(mtype, A%n, A%aa, A%row, A%column, error)
-!!$    IF (error /= 0) THEN
-!!$       WRITE(*,*) 'The following ERROR was detected (1): ', error
-!!$       STOP
-!!$    ENDIF
+    CALL pardiso_chkmatrix(mtype, A%n, A%aa, A%row, A%column, error)
+    IF (error /= 0) THEN
+       WRITE(*,*) 'The following ERROR was detected (1): ', error
+       STOP
+    ENDIF
     !
     PRINT*,'paso  pardiso_chkmatrix'
     !
@@ -153,21 +153,21 @@ CONTAINS
     !     Checks the given vectors for infinite and NaN values
     !     Input parameters (see PARDISO user manual for a description):
     !     Use this functionality only for debugging purposes
-!!$    CALL pardiso_chkvec (A%n, nrhs, xx, error)
-!!$    IF (error /= 0) THEN
-!!$       WRITE(*,*) 'The following ERROR was detected (2): ', error
-!!$       STOP
-!!$    ENDIF
+    CALL pardiso_chkvec (A%n, nrhs, xx, error)
+    IF (error /= 0) THEN
+       WRITE(*,*) 'The following ERROR was detected (2): ', error
+       STOP
+    ENDIF
     !
     PRINT*,'paso  pardiso_chkvec'
     ! ..  pardiso_printstats(...) 
     !     prints information on the matrix to STDOUT.
     !     Use this functionality only for debugging purposes
-!!$    CALL pardiso_printstats (mtype, A%n, A%aa, A%row, A%column, nrhs, bb, error)
-!!$    IF (error .NE. 0) THEN
-!!$       WRITE(*,*) 'The following ERROR was detected (3): ', error
-!!$       STOP
-!!$    ENDIF
+    CALL pardiso_printstats (mtype, A%n, A%aa, A%row, A%column, nrhs, bb, error)
+    IF (error .NE. 0) THEN
+       WRITE(*,*) 'The following ERROR was detected (3): ', error
+       STOP
+    ENDIF
     !
     PRINT*,'paso  pardiso_printstats'
     !..   Reordering and Symbolic Factorization, This step also allocates
@@ -180,7 +180,7 @@ CONTAINS
     CALL pardiso(pt, maxfct, mnum, mtype, phase, A%n, A%aa, A%row, A%column,&
                   idum, nrhs, iparm, msglvl, ddum, ddum, error, dparm)
     !
-    PRINT*,'paso  pardiso reordenamiento'
+    !PRINT*,'paso  pardiso reordenamiento'
     WRITE(*,*) 'Reordering completed ... '
     !
     IF (error /= 0) THEN
@@ -196,7 +196,7 @@ CONTAINS
     phase     = 22  ! only factorization
     CALL pardiso (pt, maxfct, mnum, mtype, phase, A%n, A%aa, A%row, A%column,& 
                   idum, nrhs, iparm, msglvl, ddum, ddum, error, dparm) 
-    !
+    
     IF (iparm(33) == 1)  THEN
        WRITE(*,*) 'Log of determinant is  ',  dparm(33)
     ENDIF
@@ -218,8 +218,8 @@ CONTAINS
     !
     !.. Termination and release of memory
     phase     = -1           ! release internal memory
-    CALL pardiso (pt, maxfct, mnum, mtype, phase, A%n, ddum, idum, idum,& 
-                  idum, nrhs, iparm, msglvl, ddum, ddum, error, dparm) 
+    !CALL pardiso (pt, maxfct, mnum, mtype, phase, A%n, ddum, idum, idum,& 
+    !              idum, nrhs, iparm, msglvl, ddum, ddum, error, dparm) 
     !
   END SUBROUTINE sol_pardiso
   !
