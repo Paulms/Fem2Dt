@@ -151,16 +151,16 @@ CONTAINS
     !
   END FUNCTION u_neumann
   !
-  FUNCTION u_ex(xyz,nu,ref)
+  FUNCTION u_ex(xyz,nu,ref,tf)
     !
     ! Solucion exacta del problema
     !
     REAL(KIND=dp), INTENT(IN) :: xyz(:),nu
     INTEGER, INTENT(in)       :: ref
-    REAL(kind=dp)             :: u_ex, x, y,x0,y0
+    REAL(kind=dp)             :: u_ex, x, y,x0,y0,tf
     !
     u_ex = 0.0_dp; x = 0.0_dp; y = 0.0_dp
-    x0 = 0.05_dp; y0 = 0.05_dp
+    x0 = 0.05_dp; y0 = 0.05_dp; tf = 0.0_dp
     !
     x = xyz(1)
     y = xyz(2)
@@ -174,16 +174,16 @@ CONTAINS
     !
   END FUNCTION u_ex
 
-  FUNCTION grad_ex(xyz,nu,ref)
+  FUNCTION grad_ex(xyz,nu,ref,tf)
     !
     ! Gradiente de la solucion exacta del problema
     !
     REAL(KIND=dp), INTENT(IN) :: xyz(:),nu
     INTEGER, INTENT(in)       :: ref
-    REAL(kind=dp)             :: grad_ex(SIZE(xyz)), x, y, x0,y0
+    REAL(kind=dp)             :: grad_ex(SIZE(xyz)), x, y, x0,y0,tf
     !
     grad_ex = 0.0_dp; x = 0.0_dp; y = 0.0_dp
-    x0 = 0.05_dp; y0 = 0.05_dp
+    x0 = 0.05_dp; y0 = 0.05_dp;tf = 0.0_dp
     !
     x = xyz(1)
     y = xyz(2)

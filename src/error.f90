@@ -17,7 +17,7 @@ MODULE error
   !
 CONTAINS
   !  
-  SUBROUTINE estimacion(malla,fisica,frontera,uh,aprox)
+  SUBROUTINE estimacion(malla,fisica,frontera,uh,aprox,tf)
     TYPE(mesh)                 :: malla 
     TYPE(param)                :: fisica
     TYPE(bc)                   :: frontera
@@ -25,8 +25,8 @@ CONTAINS
     REAL(kind=dp), INTENT(in)  :: uh(:)
     REAL(kind=dp)              :: h_max, norma_l2, snorma_h1, norma_h1, eta
     INTEGER                    :: iunit
-    REAL(kind=dp)              :: tt
-    tt = 0
+    REAL(kind=dp)              :: tf
+    tf = 0.0_dp
     !
     CALL util_get_unit(iunit)
     !
@@ -39,22 +39,22 @@ CONTAINS
        !    
        CALL h_malla(malla,h_max)
        !
-       CALL a_priori(malla,fisica,uh,norma_l2,snorma_h1,norma_h1)
+       CALL a_priori(malla,fisica,uh,norma_l2,snorma_h1,norma_h1,tf)
        !
        WRITE(iunit,*)' h         ||u-uh||_{0,\Omega}               |u-uh|_{1,\Omega}               ||u-uh||_{\Omega}'
        WRITE(iunit,*) h_max, SQRT(norma_l2), SQRT(snorma_h1), SQRT(norma_h1)
        !
     CASE(2)          ! Solo error a posteriori
        !
-       CALL a_posteriori(malla,fisica,frontera,uh,eta)
+       CALL a_posteriori(malla,fisica,frontera,uh,eta,tf)
        !
     CASE(3)          ! A posteriori y a priori
        !
        CALL h_malla(malla,h_max)
        !
-       CALL a_priori(malla,fisica,uh,norma_l2,snorma_h1,norma_h1)
+       CALL a_priori(malla,fisica,uh,norma_l2,snorma_h1,norma_h1,tf)
        !
-       CALL a_posteriori(malla,fisica,frontera,uh,eta)  
+       CALL a_posteriori(malla,fisica,frontera,uh,eta,tf)  
        WRITE(iunit,*)' h ||u-uh||_{0,\Omega}  |u-uh|_{1,\Omega}  ||u-uh||_{\Omega}   eta   efectividad   '
        WRITE(iunit,*) h_max, SQRT(norma_l2), SQRT(snorma_h1), SQRT(norma_h1), eta, eta/SQRT(norma_h1)
        !
@@ -67,7 +67,7 @@ CONTAINS
     !
   END SUBROUTINE estimacion
   !
-  SUBROUTINE a_priori(malla,fisica,uh,norma_l2,snorma_h1,norma_h1)
+  SUBROUTINE a_priori(malla,fisica,uh,norma_l2,snorma_h1,norma_h1,tf)
     
     TYPE(mesh)                 :: malla 
     TYPE(param)                :: fisica
@@ -77,8 +77,10 @@ CONTAINS
     REAL(kind=dp),ALLOCATABLE  :: points(:,:),coor(:,:),weights(:),uh_node(:)
     INTEGER, ALLOCATABLE       :: mm(:)
     INTEGER                    :: npi,ndim,dof,nod,nodof,i,j,ind,ref_ele,ierr
+    REAL(kind=dp)              :: tf
     !
     npi = 0; ndim = 0; dof = 0; nod = 0; nodof = 0; ref_ele = 0; ierr = 0
+    tf = 0.0_dp
     !
     npi   = malla%element%npi
     dof   = malla%element%dof
@@ -121,11 +123,11 @@ CONTAINS
           END IF
        END DO
        !
-       CALL nl2_local(points,weights,coor,uh_node,fisica%nu(ind),ref_ele,nl2)
+       CALL nl2_local(points,weights,coor,uh_node,fisica%nu(ind),ref_ele,nl2,tf)
        !
        norma_l2 = norma_l2 + nl2
        !
-       CALL snh1_local(points,weights,coor,uh_node,fisica%nu(ind),ref_ele,snh1)     
+       CALL snh1_local(points,weights,coor,uh_node,fisica%nu(ind),ref_ele,snh1,tf)     
        !
        snorma_h1 = snorma_h1 + snh1
        !
@@ -141,16 +143,16 @@ CONTAINS
     !
   END SUBROUTINE a_priori
   !
-  SUBROUTINE nl2_local(points,weights,coord,uh_node,nu,ref_ele,nl2)
+  SUBROUTINE nl2_local(points,weights,coord,uh_node,nu,ref_ele,nl2,tf)
     !
     REAL(kind=dp),INTENT(in)  :: points(:,:),weights(:),coord(:,:),uh_node(:),nu
     INTEGER, INTENT(in)       :: ref_ele
     REAL(kind=dp),INTENT(out) :: nl2
     INTEGER                   :: i,j,ierr,npi,ndim,nod
     REAL(kind=dp),ALLOCATABLE :: Bt(:,:),DPref(:,:),Pref(:),afin(:)
-    REAL(kind=dp)             :: det
+    REAL(kind=dp)             :: det,tf
     !
-    nod = 0; npi = 0; ndim = 0; ierr = 0
+    nod = 0; npi = 0; ndim = 0; ierr = 0;tf=0.0_dp
     !
     nod   = SIZE(uh_node)
     npi   = SIZE(points,1)
@@ -177,7 +179,7 @@ CONTAINS
        !
        afin = MATMUL(coord,Pref)
        !
-       nl2  = nl2 + ((u_ex(afin,nu,ref_ele) - DOT_PRODUCT(Pref,uh_node))**2)*det*weights(i)
+       nl2  = nl2 + ((u_ex(afin,nu,ref_ele,tf) - DOT_PRODUCT(Pref,uh_node))**2)*det*weights(i)
        !
     END DO
     !
@@ -189,16 +191,16 @@ CONTAINS
     !
   END SUBROUTINE nl2_local
   !
-  SUBROUTINE snh1_local(points,weights,coord,uh_node,nu,ref_ele,snh1) 
+  SUBROUTINE snh1_local(points,weights,coord,uh_node,nu,ref_ele,snh1,tf) 
     !
     REAL(kind=dp),INTENT(in)  :: points(:,:),weights(:),coord(:,:),uh_node(:),nu
     INTEGER,INTENT(in)        :: ref_ele
     REAL(kind=dp),INTENT(out) :: snh1
     INTEGER                   :: i,j,ierr,npi,ndim,nod
     REAL(kind=dp),ALLOCATABLE :: Bt(:,:),DPref(:,:),Pref(:),DeP(:,:),afin(:)
-    REAL(kind=dp)             :: det
+    REAL(kind=dp)             :: det, tf
     !
-    nod = 0; npi = 0; ndim = 0; ierr = 0
+    nod = 0; npi = 0; ndim = 0; ierr = 0;tf = 0.0_dp
     !
     nod   = SIZE(uh_node)
     npi   = SIZE(points,1)
@@ -229,8 +231,9 @@ CONTAINS
        CALL invert(Bt)
        DeP = MATMUL(Bt,DPref)
        !
-       snh1  = snh1 + DOT_PRODUCT(grad_ex(afin,nu,ref_ele) - MATMUL(DeP,uh_node),grad_ex(afin,nu,ref_ele) - MATMUL(DeP,uh_node))*&
-                                  det*weights(i)
+       snh1  = snh1 + DOT_PRODUCT(grad_ex(afin,nu,ref_ele,tf) - &
+       MATMUL(DeP,uh_node),grad_ex(afin,nu,ref_ele,tf) - &
+       MATMUL(DeP,uh_node))*det*weights(i)
        !
     END DO
     !
@@ -242,7 +245,7 @@ CONTAINS
     !
   END SUBROUTINE snh1_local
     !
-  SUBROUTINE a_posteriori(malla,fisica,frontera,uh,eta)
+  SUBROUTINE a_posteriori(malla,fisica,frontera,uh,eta,tf)
     !
     TYPE(mesh)                  :: malla
     TYPE(param)                 :: fisica
@@ -250,11 +253,12 @@ CONTAINS
     REAL(kind=dp),INTENT(in)    :: uh(:)
     REAL(kind=dp),ALLOCATABLE   :: medida(:),eta_R(:)
     INTEGER                     :: iunit,i
-    REAL(kind=dp)               :: eta, eta_max, theta, factor, tol      
+    REAL(kind=dp)               :: eta, eta_max, theta, factor, tol, tf      
     !
     ALLOCATE(eta_R(malla%nelem),medida(malla%nelem))
     !
     eta = 0.0_dp; eta_R = 0.0_dp; iunit = 0; medida = 0.0_dp; eta_max = 0.0_dp; tol = 0.0_dp
+    tf = 0.0_dp
     !
     theta  = 0.25_dp
     !
@@ -264,7 +268,7 @@ CONTAINS
     !
     CALL util_medida(malla,medida)
     !
-    CALL residual(malla,fisica,frontera,uh,eta_R)
+    CALL residual(malla,fisica,frontera,uh,eta_R,tf)
     !
     eta = SQRT(SUM(eta_R))
     !
@@ -295,7 +299,7 @@ CONTAINS
     !
   END SUBROUTINE a_posteriori
   !
-  SUBROUTINE residual(malla,fisica,frontera,uh,eta_R)
+  SUBROUTINE residual(malla,fisica,frontera,uh,eta_R, tf)
     !
     ! Estimador residual para el pb de transporte   (2D por ahora)
     !
@@ -304,10 +308,10 @@ CONTAINS
     TYPE(bc)                  :: frontera
     REAL(kind=dp), INTENT(in) :: uh(:)
     REAL(kind=dp), INTENT(out):: eta_R(:)
-    REAL(kind=dp)             :: norma_residuo,norma_salto
+    REAL(kind=dp)             :: norma_residuo,norma_salto, tf
     INTEGER                   :: i,nelem
     !
-    nelem = 0; eta_R = 0.0_dp
+    nelem = 0; eta_R = 0.0_dp; tf = 0.0_dp
     !
     nelem = malla%nelem
     !
@@ -315,7 +319,7 @@ CONTAINS
        !
        norma_residuo = 0.0_dp; norma_salto = 0.0_dp
        !
-       CALL n_residuo(malla,fisica,i,uh,norma_residuo)
+       CALL n_residuo(malla,fisica,i,uh,norma_residuo,tf)
        !
        CALL n_salto(malla,fisica,frontera,i,uh,norma_salto)
        !
@@ -325,7 +329,7 @@ CONTAINS
     !
   END SUBROUTINE residual
   !
-  SUBROUTINE n_residuo(malla,fisica,ele,uh,norma_residuo)
+  SUBROUTINE n_residuo(malla,fisica,ele,uh,norma_residuo,tf)
     !
     TYPE(mesh)                :: malla
     TYPE(param)               :: fisica
@@ -336,9 +340,10 @@ CONTAINS
     INTEGER, ALLOCATABLE      :: mm(:)
     REAL(kind=dp), ALLOCATABLE:: coord(:,:), Bt(:,:), DPref(:,:), DeP(:,:), f_node(:), uh_node(:),&
                                  points(:,:),weights(:), velo(:), Pref(:),afin(:)
+    REAL(kind=dp)             :: tf
     !
     norma_residuo = 0.0_dp; nod = 0; ndim = 0; ref_ele = 0; nu = 0.0_dp; sigma = 0.0_dp; theta_T = 0.0_dp
-    h_elem = 0.0_dp; npi = 0
+    h_elem = 0.0_dp; npi = 0; tf = 0.0_dp
     !
     nod  = malla%element%nod
     ndim = malla%ndim
@@ -407,7 +412,7 @@ CONTAINS
        !
        afin = MATMUL(coord,Pref)
        !
-       norma_residuo = norma_residuo + (func(afin,0.0_dp,nu,velo,sigma,ref_ele) &
+       norma_residuo = norma_residuo + (func(afin,tf,nu,velo,sigma,ref_ele) &
                         - DOT_PRODUCT(velo,MATMUL(DeP,uh_node)))**2*det*weights(i)
        !
     END DO

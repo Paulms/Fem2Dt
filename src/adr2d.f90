@@ -145,7 +145,7 @@ PROGRAM adr2d
   !
   IF(aprox /=0) THEN
      WRITE(*,'(/,a,/)')'Calculando el error a priori y/o a posteriori: estimacion'
-     !CALL estimacion(malla,fisica,frontera,uh,aprox)
+     CALL estimacion(malla,fisica,frontera,uh,aprox,tiempo%final)
   END IF
   !
 END PROGRAM adr2d
