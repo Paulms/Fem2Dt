@@ -1,0 +1,30 @@
+# Makefile created by mkmf $Id: mkmf,v 14.0 2007/03/20 22:13:27 fms Exp $ 
+
+include template
+
+
+.DEFAULT:
+	-touch $@
+all: malla2adr2d
+decimal.o: ./decimal.f90
+	$(FC) $(FFLAGS) $(OTHERFLAGS) -c ./decimal.f90
+malla2adr2d.o: ./malla2adr2d.f90 decimal.o 
+	$(FC) $(FFLAGS) $(OTHERFLAGS) -c ./malla2adr2d.f90
+SRC = ./decimal.f90 ./malla2adr2d.f90 
+OBJ =  decimal.o malla2adr2d.o 
+clean: neat
+	-rm -f .cppdefs $(OBJ) ../bin/malla2adr2d *.mod
+neat:
+	-rm -f $(TMPFILES)
+TAGS: $(SRC)
+	etags $(SRC)
+tags: $(SRC)
+	ctags $(SRC)
+malla2adr2d: $(OBJ) 
+	$(LD) $(OBJ) -o ../bin/malla2adr2d  $(LDFLAGS)
+
+
+
+
+
+

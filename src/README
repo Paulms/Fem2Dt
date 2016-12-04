@@ -1,0 +1,18 @@
+I. Compilacion del codigo:
+
+1. Se debe compilar el programa malla2adr2d.f90 que genera un ejecutable,
+   en el directorio bin/ llamado malla2adr2d. Esta compilacion se logra 
+   escribiendo lo siguiente en el directorio src/ :
+   	       
+	       make -f Makefile_malla2adr2d
+
+2. Se debe compilar el programa principal adr2d.f90, esto genera el ejecutable
+   adr2d en el directorio bin/ . Esta compilacion se logra escribiendo lo
+   siguiente en el directorio src/ :
+   
+		make
+
+II. Ejecucion del codigo en un caso particular:
+
+1.  Para mantener las cosas ordenadas, cada caso particular esta en un
+    subdirectorio del 
