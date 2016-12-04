@@ -1,0 +1,21 @@
+ # Numero de lados/caras de la malla
+          18
+ # Nodos que componen cada lado/cara y referencia del lado/cara:
+           5           7           8             0
+           5           1           7             0
+           8           1           5             0
+           8           7           1             1
+           5           6           1             0
+           5           3           6             0
+           1           3           5             0
+           1           6           3             0
+           4           5           1             0
+           4           3           5             0
+           1           3           4             0
+           6           2           7             0
+           6           1           2             0
+           7           1           6             0
+           7           2           1             1
+           6           3           2             0
+           1           2           3             0
+           5           6           7             0

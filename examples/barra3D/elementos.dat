@@ -1,0 +1,23 @@
+ # Numero de elementos de la malla:
+      6
+ # Conectividad nodal de los elementos y sus referencias:
+        1         8         7         5         1
+        3         1         6         5         1
+        3         1         5         4         1
+        1         7         2         6         1
+        3         1         2         6         1
+        1         7         6         5         1
+ # Conectividad de los elementos con respecto a los lados/caras:
+           4           2           3           1
+           8           6           7           5
+           7          10          11           9
+          15          13          14          12
+          17          16           8          13
+          14           5           2          18
+ # Numero de los elementos vecinos, por lado/cara, a cada elemento:
+          -1          -1           6          -1
+           5           3          -1           6
+           2          -1          -1          -1
+          -1           6           5          -1
+          -1           2          -1           4
+           4           1           2          -1

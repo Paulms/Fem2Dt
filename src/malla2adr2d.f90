@@ -119,14 +119,17 @@ PROGRAM malla2adr2d
      STOP
   END SELECT
   !
+  PRINT *,"leyendo ",name_node,"..."
   DO i=1,nnode
      READ(50,*) j,coord(:,i),ref_node(i)
   END DO
   !
+  PRINT *,"leyendo ",name_ele,"..."
   DO i=1,nelem
      READ(60,*)j,conectivity(:,i),ref_elem(i)
   END DO
   !
+  PRINT *,"leyendo ",name_face,"..."
   DO i=1,nface
      READ(70,*)j,conec_face(:,i),ref_face(i)
   END DO
@@ -137,6 +140,7 @@ PROGRAM malla2adr2d
   END DO
   !
   !
+  PRINT *,"leyendo ",name_vecino,"..."
   READ(80,*)
   !
   ! leyendo los vecinos de los triangulos y/o tetraedros
@@ -163,6 +167,7 @@ PROGRAM malla2adr2d
   !
   ! Calculo de la conectividad por lados/caras
   !
+  PRINT *,"Calculando número de caras..."
   CALL caras_num(nface,conec_face,mini,maxi,link,suma)
   !
   DO i=1,nelem
@@ -196,6 +201,7 @@ PROGRAM malla2adr2d
   !
   ! generando los archivos de salida
   !
+  PRINT *,"Escribiendo datos..."
   WRITE(10,*) '# Numero de nodos de la malla:'
   WRITE(10,'(i7)') nnode
   !
