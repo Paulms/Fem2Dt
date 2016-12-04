@@ -96,7 +96,7 @@ CONTAINS
     END SELECT
     !
     SELECT CASE(ref)
-    CASE(1)
+    CASE(2)
        !
        u_dirichlet =  5.0_dp
        !

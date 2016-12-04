@@ -1,14 +1,14 @@
  # First line: <# of points> <dimension (3)> <# of attributes>
            8           3           0           1
  # Following lines: <point #> <x> <y> <z> [attributes] [boundary marker]
-           1           0           0           0  1
-           2           0           0   1.0000000000000000  1    
+           1           0           0           0  0
+           2           0           0   1.0000000000000000  0    
            3   2.0000000000000000                0   1.0000000000000000  0     
            4   2.0000000000000000                0           0  0
            5   2.0000000000000000        1.0000000000000000                0  0
            6   2.0000000000000000        1.0000000000000000        1.0000000000000000  0     
-           7           0   1.0000000000000000        1.0000000000000000     1
-           8           0   1.0000000000000000                0  1
+           7           0   1.0000000000000000        1.0000000000000000     0
+           8           0   1.0000000000000000                0  0
  # One line: <# of facets> <boundary markers (0 or 1)>
            6           1
  # Following lines: Facets
@@ -24,7 +24,7 @@
            4           3           4           5           6   
            1           0 
            4           5           6           7           8   
-           1           0   1
+           1           0   2
            4           7           8           1           2
  # One line: <# of holes>
            0
@@ -32,4 +32,4 @@
            0
  # Optional line: <# of regional attributes and/or area constraints>
  # Optional following lines: <region #> <x> <y> <z> <region number> <region attribute>
- # tetgen -fApgn barra.poly   
+ # tetgen -fApgnq1.414a0.1 barra.poly   

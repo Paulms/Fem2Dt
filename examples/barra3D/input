@@ -5,9 +5,9 @@ nodos.dat                                 ------> nombre del archivo con los nod
 caras.dat                                 ------> nombre del archivo con las caras(lados)
 elementos.dat                             ------> nombre del archivo con los elementos
  1                                        ------> numero total dominios fisicos diferentes
- 1  1.0 0.0 0.0 0.0 0.0                       ------> No ref dominio, nu, aa(:), sigma
+ 1  5.0 0.0 0.0 0.0 0.0                       ------> No ref dominio, nu, aa(:), sigma
  1                                        ------> numero total de fronteras Dirichlet
- 1    1                                   ------> No ref Dirichlet, bloqueo de los dof
+ 2    1                                   ------> No ref Dirichlet, bloqueo de los dof
  0                                        ------> No condicion de Neumann no nula
  1                                        ------> Metodo de elementos finitos a usar (1 = Galerkin; 2 = Estabilizado; 3 = LPS modif)
  1                                        ------> Metodo de resolucion del sist lineal (1=SuperLU; 2 = GMRES; 3 = pGMRES, 4 = PARDISO)
