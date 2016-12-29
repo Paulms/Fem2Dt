@@ -101,7 +101,7 @@ PROGRAM adr2d
 
   allocate(ua(malla%nnode))
   ua = 0
-  DO i = 0,tiempo%nn
+  DO i = 1,tiempo%nn
     tt = tt + tiempo%delta
     PRINT *,'Calculos en el paso de tiempo: ',tt
     ! 
