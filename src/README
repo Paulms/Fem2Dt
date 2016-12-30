@@ -15,4 +15,7 @@ I. Compilacion del codigo:
 II. Ejecucion del codigo en un caso particular:
 
 1.  Para mantener las cosas ordenadas, cada caso particular esta en un
-    subdirectorio del 
+    subdirectorio del directorio examples
+
+2. Los ejemplos barra y barra3D, trabajan con el mismo archivo funciones.f90
+   para cualquier nuevo ejemplo se debe modificar también este archivo

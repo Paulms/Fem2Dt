@@ -1,0 +1,11 @@
+FC = gfortran
+CC = gcc
+LD = gfortran
+
+LIBS= -L/home/paulmendez/lib -lsuperlu /home/paulmendez/lib/libpardiso500-GNU481-X86-64.so -L/home/paulmendez/lib/ -lskit -L/usr/lib/ -lblas -llapack
+
+FFLAGS =  -g -fopenmp -funderscoring -ffree-line-length-0#-traceback -auto -heap-arrays -fpe0 -ftrapuv
+CFLAGS = -g -I/home/paulmendez/fortran/SuperLU_5.2.1/SRC/
+LDFLAGS =  $(FFLAGS) $(LIBS)
+LIST = -listing
+
