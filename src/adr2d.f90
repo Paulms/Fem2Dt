@@ -38,8 +38,8 @@ PROGRAM adr2d
   !                    Tel   : (56-41) 20.31.16                                            |
   !                    Fax   : (56-41) 52.20.55                                            |
   !                    e-mail: rodolfo.araya@udec.cl                                       |
-  !     Modificado por: Willian Miranda                                                    |
-  !                     e-mail: wmiranda@ing-mat.udec.cl                                   |
+  !     Modificado por: Paul Mendez                                                    |
+  !                     e-mail: pmendez@ing-mat.udec.cl                                   |
   !                                                                                        |
   !      Version 1   : Septiembre de 2000 (con almacenamiento banda y Cholesky)            |
   !      Version 2   : Enero de 2001 (con almacenamiento Morse y GMRES de SLATEC)          |
