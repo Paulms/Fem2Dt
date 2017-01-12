@@ -68,6 +68,15 @@ CONTAINS
     !
   END FUNCTION func
   !
+  SUBROUTINE u_inicial(uh)
+    !
+    ! Solucion exacta del problema
+    !
+    REAL(KIND=dp)	      :: uh(:)
+    !
+    uh = 0.0_dp
+    !
+  END SUBROUTINE u_inicial
   FUNCTION u_dirichlet(xyz,nu,aa,sigma,ref, tt)
     !
     !The Dirichlet BC
@@ -98,10 +107,10 @@ CONTAINS
     SELECT CASE(ref)
     CASE(2)
        !
-       u_dirichlet =  5.0_dp
+       u_dirichlet =  1.0_dp !circulo case2 u_dir 10
        !
-    !CASE (2)
-    !    u_dirichlet =  0.0_dp
+    CASE (3)
+        u_dirichlet =  0.0_dp
     CASE default
        PRINT*,'Mala referencia del nodo!! M: Funciones, S: u_dirichlet', ref
        STOP

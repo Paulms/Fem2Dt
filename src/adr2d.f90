@@ -3,7 +3,7 @@ PROGRAM adr2d
   ! Este programa resuelve el problema de Adveccion-Difusion-Reaccion con                  |
   ! condiciones de Dirichlet/Neumann en la frontera:                                       |
   !                                                                                        |
-  ! -div(\nu*\nabla u) + \mathbf{velocidad}\cdot\nabla u + \sigma u = f,   en \Omega       |
+  ! du/dt -div(\nu*\nabla u) + \mathbf{velocidad}\cdot\nabla u + \sigma u = f,   en \Omega |
   !                                                               u = u_0, en \Gamma_D     |
   !                                        \nu \cdot\nabla u\cdot n = 0,   en \Gamma_N     |
   !                                                                                        |
@@ -38,8 +38,8 @@ PROGRAM adr2d
   !                    Tel   : (56-41) 20.31.16                                            |
   !                    Fax   : (56-41) 52.20.55                                            |
   !                    e-mail: rodolfo.araya@udec.cl                                       |
-  !     Modificado por: Paul Mendez                                                        |
-  !                     e-mail: pmendez@ing-mat.udec.cl                                    |
+  !     Modificado por: Willian Miranda                                                    |
+  !                     e-mail: wmiranda@ing-mat.udec.cl                                   |
   !                                                                                        |
   !      Version 1   : Septiembre de 2000 (con almacenamiento banda y Cholesky)            |
   !      Version 2   : Enero de 2001 (con almacenamiento Morse y GMRES de SLATEC)          |
@@ -62,6 +62,7 @@ PROGRAM adr2d
   USE plot          ! las subrutinas que generan los archivos de visualizacion
   USE util          ! algunas subrutinas utiles (lectura de datos, etc)
   USE error         ! calculo de errores a priori y/o a posteriori
+  USE funciones
   !
   IMPLICIT NONE
   !
@@ -100,7 +101,15 @@ PROGRAM adr2d
   tiempo%delta = tiempo%final/tiempo%nn
 
   allocate(ua(malla%nnode))
-  ua = 0
+  ua = 0.0_dp
+  CALL u_inicial(ua)
+!
+! Guardamos datos iniciales
+!
+CALL storage_f(malla,fisica,metodo,uh, ua, 0.0_dp, tiempo%delta)
+WRITE(*,'(/,a,/)')'Generando los archivos para la visualizacion: plot_result'
+CALL plot_results(malla,visu,name_visu,uh,0)
+DEALLOCATE(uh)
   DO i = 1,tiempo%nn
     tt = tt + tiempo%delta
     PRINT *,'Calculos en el paso de tiempo: ',tt
@@ -149,14 +158,4 @@ PROGRAM adr2d
   END IF
   !
 END PROGRAM adr2d
-
-
-
-
-
-
-
-
-
-
 

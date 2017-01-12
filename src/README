@@ -19,3 +19,11 @@ II. Ejecucion del codigo en un caso particular:
 
 2. Los ejemplos barra y barra3D, trabajan con el mismo archivo funciones.f90
    para cualquier nuevo ejemplo se debe modificar también este archivo
+
+III. ejemplos
+
+1. Barra, simula un sistema en el que se calienta la pared izquierda de una
+   barra rectangular en dos dimensiones.
+
+2. Barra3D, simula el calentamiento del centro de la pared izquierda de una
+   barra con forma de prisma rectangular.
